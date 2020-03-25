@@ -70,13 +70,16 @@ public class SortingMethods {
 
     /********/
 
-    public int[] mergeSort(boolean printOutcome){
+    public int[] mergeSort(boolean printOutcome) {
         array = initialArray.clone();
         resetCounters();
         int n = array.length;
 
-        if(n>1){
-
+        if (n > 1) {
+            int p = 0;
+//            int q = p;
+            int r = (int) Math.floor(n * 0.5);
+            mergesorting(array, p, r);
         }
 
 
@@ -88,7 +91,62 @@ public class SortingMethods {
     }
 
 
+    void merge(int[] arr, int p, int q, int r) {
 
+        int n1 = q - p + 1;  //find sizes of subarrays
+        int n2 = r - q;
+
+        int[] L = new int[n1];  //create temp arrays
+        int[] R = new int[n2];
+
+        //fill temp arrays - copy data
+        for (int i = 0; i < n1; ++i)
+            L[i] = arr[p + i];
+        for (int j = 0; j < n2; ++j)
+            R[j] = arr[q + 1 + j];
+
+        int i = 0;      //indexes of both subarrays
+        int j = 0;
+
+        // initial index of merged subarry array
+        int k = p;
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                arr[k] = L[i];
+                i++;
+            } else {
+                arr[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+        // copy remaining elements of L[] if any
+        while (i < n1) {
+            arr[k] = L[i];
+            i++;
+            k++;
+        }
+        //copy remaining elements of R[] if any
+        while (j < n2) {
+            arr[k] = R[j];
+            j++;
+            k++;
+        }
+    }
+
+    void mergesorting(int[] arr, int p, int r) {
+        if (p < r) {
+            // find middle point
+            int m = (p + r) / 2;
+
+            //sort both subarrays
+            mergesorting(arr, p, m);
+            mergesorting(arr, m + 1, r);
+
+            //merge sorted arrays
+            merge(arr, p, m, r);
+        }
+    }
 
     /***********/
     public int[] quickSort(boolean printOutcome) {
@@ -172,7 +230,6 @@ public class SortingMethods {
         setComparisonsCounter(0);
         setSwapsCounter(0);
     }
-
 
 
 }
