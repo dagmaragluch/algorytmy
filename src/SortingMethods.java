@@ -77,11 +77,9 @@ public class SortingMethods {
 
         if (n > 1) {
             int p = 0;
-//            int q = p;
-            int r = (int) Math.floor(n * 0.5);
+            int r = n - 1;
             mergesorting(array, p, r);
         }
-
 
         if (printOutcome) {
             System.out.println("Merge Sort");
@@ -111,6 +109,8 @@ public class SortingMethods {
         // initial index of merged subarry array
         int k = p;
         while (i < n1 && j < n2) {
+            comparisonsCounter++;
+            swapsCounter++;
             if (L[i] <= R[j]) {
                 arr[k] = L[i];
                 i++;
@@ -123,12 +123,14 @@ public class SortingMethods {
         // copy remaining elements of L[] if any
         while (i < n1) {
             arr[k] = L[i];
+            swapsCounter++;
             i++;
             k++;
         }
         //copy remaining elements of R[] if any
         while (j < n2) {
             arr[k] = R[j];
+            swapsCounter++;
             j++;
             k++;
         }
@@ -136,8 +138,7 @@ public class SortingMethods {
 
     void mergesorting(int[] arr, int p, int r) {
         if (p < r) {
-            // find middle point
-            int m = (p + r) / 2;
+            int m = (int) Math.floor((p + r) * 0.5);     // middle point
 
             //sort both subarrays
             mergesorting(arr, p, m);
@@ -147,6 +148,34 @@ public class SortingMethods {
             merge(arr, p, m, r);
         }
     }
+
+//    void merge2(int[] arr) {
+//        int r = arr.length - 1;
+//        int q = (int) Math.floor(r * 0.5);
+//        int p = 0;
+//        int n1 = q - p + 1;  //find sizes of subarrays
+//        int n2 = r - q;
+//        int[] L = new int[n1];  //create temp arrays
+//        int[] R = new int[n2];
+//
+//        for (int i = 0; i < n1; i++)
+//            L[i] = arr[p + i];
+//        for (int j = 0; j < n2; j++)
+//            R[j] = arr[q + 1 + j];
+//
+//        int i = 0, j = 0;
+//
+//        for (int k = p; k < r; k++) {
+//            if (L[i] <= R[j]) {
+//                arr[k] = L[i];
+//                i++;
+//            } else {
+//                arr[k] = R[j];
+//                j++;
+//            }
+//        }
+//    }
+
 
     /***********/
     public int[] quickSort(boolean printOutcome) {
