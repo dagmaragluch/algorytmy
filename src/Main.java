@@ -5,16 +5,22 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.System.exit;
+
 public class Main {
 
     public static void main(String[] args) {
         String mode = args[0]; //--type or --stat
         String typeOrFileName = args[1]; //type or nazwa_pliku
-        String sortOrderOrK = args[2];
+        String comp = args[2];
+        String sortOrderOrK = args[3];
         int repeats;
+        boolean isDESC_SortOrder;
 
         int swapsCounter = 0;
         int comparisonsCounter = 0;
+
+        isDESC_SortOrder = setSortOrder(sortOrderOrK);
 
         if (mode.equals("--type")) {
             Scanner scanner = new Scanner(System.in);
@@ -38,13 +44,18 @@ public class Main {
             SortingMethods sortingMethods = new SortingMethods(numbers, swapsCounter, comparisonsCounter);
             System.out.println("\n*************");
 
+            long startTime = System.nanoTime();
+
             if (typeOrFileName.equals("insert")) {
-                sortingMethods.insertSort(true);
+                sortingMethods.insertSort(true, isDESC_SortOrder);
             } else if (typeOrFileName.equals("merge")) {
-                sortingMethods.mergeSort(true);
+                sortingMethods.mergeSort(true, isDESC_SortOrder);
             } else if (typeOrFileName.equals("quick")) {
-                sortingMethods.quickSort(true);
+                sortingMethods.quickSort(true, isDESC_SortOrder);
             }
+            long stopTime = System.nanoTime();
+            System.err.println("time: " + TimeUnit.NANOSECONDS.toNanos(stopTime - startTime));
+
         } else {
             Random random = new Random();
             repeats = Integer.parseInt(sortOrderOrK);
@@ -63,7 +74,7 @@ public class Main {
                 }
             } catch (IOException e) {
                 System.out.println("Error, cannot create the file.");
-                System.exit(0);
+                exit(0);
             }
         }
 
@@ -80,20 +91,20 @@ public class Main {
     }
 
     private static void makeStatisticsFile(SortingMethods sortingMethods, PrintWriter printWriter) {
-        long startTime = System.nanoTime();
-        int[] list = sortingMethods.selectSort(false);
-        long stopTime = System.nanoTime();
-        writeToFile("SelectSort", sortingMethods, printWriter, startTime, list, stopTime);
-
-        startTime = System.nanoTime();
-        list = sortingMethods.insertSort(false);
-        stopTime = System.nanoTime();
-        writeToFile("InsertSort", sortingMethods, printWriter, startTime, list, stopTime);
-
-        startTime = System.nanoTime();
-        list = sortingMethods.quickSort(false);
-        stopTime = System.nanoTime();
-        writeToFile("QuickSort", sortingMethods, printWriter, startTime, list, stopTime);
+//        long startTime = System.nanoTime();
+//        int[] list = sortingMethods.insertSort(false, isASC_SortOrder);
+//        long stopTime = System.nanoTime();
+//        writeToFile("InsertSort", sortingMethods, printWriter, startTime, list, stopTime);
+//
+//        startTime = System.nanoTime();
+//        list = sortingMethods.mergeSort(false, isASC_SortOrder);
+//        stopTime = System.nanoTime();
+//        writeToFile("MergeSort", sortingMethods, printWriter, startTime, list, stopTime);
+//
+//        startTime = System.nanoTime();
+//        list = sortingMethods.quickSort(false, isASC_SortOrder);
+//        stopTime = System.nanoTime();
+//        writeToFile("QuickSort", sortingMethods, printWriter, startTime, list, stopTime);
 
     }
 
@@ -108,5 +119,17 @@ public class Main {
         printWriter.print(',');
         printWriter.print(TimeUnit.NANOSECONDS.toNanos(stopTime - startTime));
         printWriter.println();
+    }
+
+    private static boolean setSortOrder(String inputString){
+        if (inputString.equals("'>='")){
+            return true;
+        }else if(inputString.equals("'<='")){
+            return false;
+        } else {
+            System.out.println("Incorrect sort order");
+            exit(1);
+            return false;
+        }
     }
 }
