@@ -12,17 +12,18 @@ public class Main {
     public static void main(String[] args) {
         String mode = args[0]; //--type or --stat
         String typeOrFileName = args[1]; //type or nazwa_pliku
-        String comp = args[2];
-        String sortOrderOrK = args[3];
+        String compOrK = args[2];
         int repeats;
         boolean isDESC_SortOrder;
 
         int swapsCounter = 0;
         int comparisonsCounter = 0;
 
-        isDESC_SortOrder = setSortOrder(sortOrderOrK);
 
         if (mode.equals("--type")) {
+            String sortOrder = args[3];
+            isDESC_SortOrder = setSortOrder(sortOrder);
+
             Scanner scanner = new Scanner(System.in);
             Scanner scanner2 = new Scanner(System.in);
 
@@ -58,7 +59,7 @@ public class Main {
 
         } else {
             Random random = new Random();
-            repeats = Integer.parseInt(sortOrderOrK);
+            repeats = Integer.parseInt(compOrK);
             try (FileWriter fileWriter = new FileWriter(typeOrFileName, false);
                  PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter))) {
                 for (int i = 100; i <= 10000; i += 100) {
@@ -77,8 +78,6 @@ public class Main {
                 exit(0);
             }
         }
-
-
     }
 
     private static int[] convertIntegers(List<Integer> integers) {
@@ -91,20 +90,20 @@ public class Main {
     }
 
     private static void makeStatisticsFile(SortingMethods sortingMethods, PrintWriter printWriter) {
-//        long startTime = System.nanoTime();
-//        int[] list = sortingMethods.insertSort(false, isASC_SortOrder);
-//        long stopTime = System.nanoTime();
-//        writeToFile("InsertSort", sortingMethods, printWriter, startTime, list, stopTime);
-//
-//        startTime = System.nanoTime();
-//        list = sortingMethods.mergeSort(false, isASC_SortOrder);
-//        stopTime = System.nanoTime();
-//        writeToFile("MergeSort", sortingMethods, printWriter, startTime, list, stopTime);
-//
-//        startTime = System.nanoTime();
-//        list = sortingMethods.quickSort(false, isASC_SortOrder);
-//        stopTime = System.nanoTime();
-//        writeToFile("QuickSort", sortingMethods, printWriter, startTime, list, stopTime);
+        long startTime = System.nanoTime();
+        int[] list = sortingMethods.insertSort(false, false);
+        long stopTime = System.nanoTime();
+        writeToFile("InsertSort", sortingMethods, printWriter, startTime, list, stopTime);
+
+        startTime = System.nanoTime();
+        list = sortingMethods.mergeSort(false, false);
+        stopTime = System.nanoTime();
+        writeToFile("MergeSort", sortingMethods, printWriter, startTime, list, stopTime);
+
+        startTime = System.nanoTime();
+        list = sortingMethods.quickSort(false, false);
+        stopTime = System.nanoTime();
+        writeToFile("QuickSort", sortingMethods, printWriter, startTime, list, stopTime);
 
     }
 
@@ -121,10 +120,10 @@ public class Main {
         printWriter.println();
     }
 
-    private static boolean setSortOrder(String inputString){
-        if (inputString.equals("'>='")){
+    private static boolean setSortOrder(String inputString) {
+        if (inputString.equals("'>='")) {
             return true;
-        }else if(inputString.equals("'<='")){
+        } else if (inputString.equals("'<='")) {
             return false;
         } else {
             System.out.println("Incorrect sort order");

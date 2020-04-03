@@ -210,11 +210,12 @@ public class SortingMethods {
             }
         }
 
-        int temp = arr[i + 1];
-        arr[i + 1] = arr[r];
-        arr[r] = temp;
-        swapsCounter++;
-        System.err.println(arr[i + 1] + "  <-->  " + arr[r]);
+//        int temp = arr[i + 1];
+//        arr[i + 1] = arr[r];
+//        arr[r] = temp;
+//        System.err.println(arr[i + 1] + "  <-->  " + arr[r]);
+//        swapsCounter++;
+        swap(arr[i + 1], arr[r]);
 
         return i + 1;
     }
@@ -235,6 +236,14 @@ public class SortingMethods {
 
     public void setSwapsCounter(int swapsCounter) {
         this.swapsCounter = swapsCounter;
+    }
+
+    public void swap(int a, int b){
+        int temp = a;
+        a = b;
+        b = temp;
+        System.err.println(a + "  <-->  " + b);
+        swapsCounter++;
     }
 
     public void printAfterSorting() {
