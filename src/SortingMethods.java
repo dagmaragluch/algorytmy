@@ -21,20 +21,14 @@ public class SortingMethods {
             if (isDESC_SortOrder) {
                 //insert arr[i] into sorted arr[0..i-1]
                 while (j >= 0 && array[j] < key) {
-                    System.err.println(array[j] + "  <  " + key);
-                    System.err.println(array[j + 1] + "  <-->  " + array[j]);
-                    comparisonsCounter++;
-                    swapsCounter++;
-                    array[j + 1] = array[j];
+                    handleComparisons(array[j], "<", key);
+                    swap(array, array, j + 1, j);    //array[j + 1] <=> array[j]
                     j--;
                 }
             } else {
                 while (j >= 0 && array[j] > key) {
-                    System.err.println(array[j] + "  >  " + key);
-                    System.err.println(array[j + 1] + "  <-->  " + array[j]);
-                    comparisonsCounter++;
-                    swapsCounter++;
-                    array[j + 1] = array[j];
+                    handleComparisons(array[j], ">", key);
+                    swap(array, array, j + 1, j);    //array[j + 1] <=> array[j]
                     j--;
                 }
             }
@@ -57,7 +51,7 @@ public class SortingMethods {
         if (n > 1) {
             int p = 0;
             int r = n - 1;
-            mergesorting(array, p, r, isDESC_SortOrder);
+            mergeSorting(array, p, r, isDESC_SortOrder);
         }
 
         if (printOutcome) {
@@ -88,30 +82,24 @@ public class SortingMethods {
         // initial index of merged subarry array
         int k = p;
         while (i < n1 && j < n2) {
-            comparisonsCounter++;
-
             if (isDESC_SortOrder) {
                 if (L[i] >= R[j]) {     // DESC sort order
-                    System.err.println(L[i] + "  >=  " + R[j]);
+                    handleComparisons(L[i], ">=", R[j]);
                     arr[k] = L[i];
                     i++;
                 } else {
-                    System.err.println(L[i] + "  < " + R[j]);
-                    System.err.println(arr[k] + "  <-->  " + R[j]);
-                    swapsCounter++;
-                    arr[k] = R[j];
+                    handleComparisons(L[i], "<", R[j]);
+                    swap(arr, R, k, j);    //arr[k] <=> R[j];
                     j++;
                 }
             } else {
                 if (L[i] <= R[j]) {     // ASC sort order
-                    System.err.println(L[i] + "  <=  " + R[j]);
+                    handleComparisons(L[i], "<=", R[j]);
                     arr[k] = L[i];
                     i++;
                 } else {
-                    System.err.println(L[i] + "  >  " + R[j]);
-                    System.err.println(arr[k] + "  <-->  " + R[j]);
-                    swapsCounter++;
-                    arr[k] = R[j];
+                    handleComparisons(L[i], ">", R[j]);
+                    swap(arr, R, k, j);    //arr[k] <=> R[j];
                     j++;
                 }
             }
@@ -131,13 +119,13 @@ public class SortingMethods {
         }
     }
 
-    void mergesorting(int[] arr, int p, int r, boolean isDESC_SortOrder) {
+    void mergeSorting(int[] arr, int p, int r, boolean isDESC_SortOrder) {
         if (p < r) {
             int m = (int) Math.floor((p + r) * 0.5);     // middle point
 
             //sort both subarrays
-            mergesorting(arr, p, m, isDESC_SortOrder);
-            mergesorting(arr, m + 1, r, isDESC_SortOrder);
+            mergeSorting(arr, p, m, isDESC_SortOrder);
+            mergeSorting(arr, m + 1, r, isDESC_SortOrder);
 
             //merge sorted arrays
             merge(arr, p, m, r, isDESC_SortOrder);
@@ -152,7 +140,7 @@ public class SortingMethods {
         int p = 0;    //start index
         int r = array.length - 1;  //ending index
 
-        quicksorting(array, p, r, isDESC_SortOrder);
+        quickSorting(array, p, r, isDESC_SortOrder);
 
         if (printOutcome) {
             System.out.println("Quick Sort");
@@ -161,15 +149,13 @@ public class SortingMethods {
         return array;
     }
 
-    /***********/
 
-    void quicksorting(int[] arr, int p, int r, boolean isDESC_SortOrder) {
-//        comparisonsCounter++;
+    void quickSorting(int[] arr, int p, int r, boolean isDESC_SortOrder) {
         if (p < r) {
             int q = partition(arr, p, r, isDESC_SortOrder);   //partition element
 
-            quicksorting(arr, p, q - 1, isDESC_SortOrder);      //recursively sort two sub-arrays
-            quicksorting(arr, q + 1, r, isDESC_SortOrder);
+            quickSorting(arr, p, q - 1, isDESC_SortOrder);      //recursively sort two sub-arrays
+            quickSorting(arr, q + 1, r, isDESC_SortOrder);
         }
     }
 
@@ -180,42 +166,26 @@ public class SortingMethods {
 
         if (isDESC_SortOrder) {     //DESC
             for (int j = P; j < r; j++) {
-                comparisonsCounter++;
                 if (arr[j] >= pivot) {  //if current element <=pivot move it to left
-                    System.err.println(arr[j] + "  >=  " + pivot);
+                    handleComparisons(arr[j], ">=", pivot);
                     i++;
-                    int temp = arr[i];
-                    arr[i] = arr[j];
-                    arr[j] = temp;
-                    System.err.println(arr[i] + "  <-->  " + arr[j]);
-                    swapsCounter++;
+                    swap(arr, arr, i, j);
                 } else {
-                    System.err.println(arr[j] + "  <  " + pivot);
+                    handleComparisons(arr[j], "<", pivot);
                 }
             }
         } else {        //ASC
             for (int j = P; j < r; j++) {
-                comparisonsCounter++;
                 if (arr[j] <= pivot) {  //if current element <=pivot move it to left
-                    System.err.println(arr[j] + "  <=  " + pivot);
+                    handleComparisons(arr[j], "<=", pivot);
                     i++;
-                    int temp = arr[i];
-                    arr[i] = arr[j];
-                    arr[j] = temp;
-                    System.err.println(arr[i] + "  <-->  " + arr[j]);
-                    swapsCounter++;
+                    swap(arr, arr, i, j);
                 } else {
-                    System.err.println(arr[j] + "  >  " + pivot);
+                    handleComparisons(arr[j], ">", pivot);
                 }
             }
         }
-
-//        int temp = arr[i + 1];
-//        arr[i + 1] = arr[r];
-//        arr[r] = temp;
-//        System.err.println(arr[i + 1] + "  <-->  " + arr[r]);
-//        swapsCounter++;
-        swap(arr[i + 1], arr[r]);
+        swap(arr, arr, i + 1, r);
 
         return i + 1;
     }
@@ -238,12 +208,17 @@ public class SortingMethods {
         this.swapsCounter = swapsCounter;
     }
 
-    public void swap(int a, int b){
-        int temp = a;
-        a = b;
-        b = temp;
-        System.err.println(a + "  <-->  " + b);
+    public void swap(int[] arr1, int[] arr2, int index1, int index2) {
+        System.err.println(arr1[index1] + " <--> " + arr2[index2]);
+        int temp = arr1[index1];
+        arr1[index1] = arr2[index2];
+        arr2[index2] = temp;
         swapsCounter++;
+    }
+
+    public void handleComparisons(int a, String comparator, int b) {
+        System.err.println(a + " " + comparator + " " + b);
+        comparisonsCounter++;
     }
 
     public void printAfterSorting() {
@@ -262,4 +237,40 @@ public class SortingMethods {
     }
 
 
+    /********************************/
+
+    public int[] dualPivotQuickSort(boolean printOutcome, boolean isDESC_SortOrder) {
+        array = initialArray.clone();
+        resetCounters();
+        int n = array.length;
+
+        ///
+
+        if (printOutcome) {
+            System.out.println("Insert Sort");
+            printAfterSorting();
+        }
+        return array;
+    }
+
+    void dualPivotQuicksorting(int[] arr, int left, int right, boolean isDESC_SortOrder) {
+        if (arr[right] > arr[left]) {
+//            swap(arr[left], arr[right]);
+        }
+
+        int p = arr[left];
+        int q = arr[right];
+
+//        partitionDualPivot(arr, p, q, posP, posQ);
+
+    }
+
+    public void rotate3(int a, int b, int c) {
+        int temp = a;
+        a = b;
+        b = c;
+        c = temp;
+//        System.err.println(a + "  <-->'  " + b);
+//        swapsCounter++;
+    }
 }
