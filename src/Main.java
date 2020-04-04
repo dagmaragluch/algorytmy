@@ -47,12 +47,19 @@ public class Main {
 
             long startTime = System.nanoTime();
 
-            if (typeOrFileName.equals("insert")) {
-                sortingMethods.insertSort(true, isDESC_SortOrder);
-            } else if (typeOrFileName.equals("merge")) {
-                sortingMethods.mergeSort(true, isDESC_SortOrder);
-            } else if (typeOrFileName.equals("quick")) {
-                sortingMethods.quickSort(true, isDESC_SortOrder);
+            switch (typeOrFileName) {
+                case "insert":
+                    sortingMethods.insertSort(true, isDESC_SortOrder);
+                    break;
+                case "merge":
+                    sortingMethods.mergeSort(true, isDESC_SortOrder);
+                    break;
+                case "quick":
+                    sortingMethods.quickSort(true, isDESC_SortOrder);
+                    break;
+                case "mquick":
+                    sortingMethods.dualPivotQuickSort(true, isDESC_SortOrder);
+                    break;
             }
             long stopTime = System.nanoTime();
             System.err.println("time: " + TimeUnit.NANOSECONDS.toNanos(stopTime - startTime));

@@ -1,6 +1,7 @@
 public class SortingMethods {
     private int[] array, initialArray;
     private int comparisonsCounter, swapsCounter;
+    private int posP1, posQ1;
 
 
     public SortingMethods(int[] initialArray, int comparisonsCounter, int swapsCounter) {
@@ -22,13 +23,13 @@ public class SortingMethods {
                 //insert arr[i] into sorted arr[0..i-1]
                 while (j >= 0 && array[j] < key) {
                     handleComparisons(array[j], "<", key);
-                    swap(array, array, j + 1, j);    //array[j + 1] <=> array[j]
+                    swap(array, j + 1, j);    //array[j + 1] <=> array[j]
                     j--;
                 }
             } else {
                 while (j >= 0 && array[j] > key) {
                     handleComparisons(array[j], ">", key);
-                    swap(array, array, j + 1, j);    //array[j + 1] <=> array[j]
+                    swap(array, j + 1, j);    //array[j + 1] <=> array[j]
                     j--;
                 }
             }
@@ -169,7 +170,7 @@ public class SortingMethods {
                 if (arr[j] >= pivot) {  //if current element <=pivot move it to left
                     handleComparisons(arr[j], ">=", pivot);
                     i++;
-                    swap(arr, arr, i, j);
+                    swap(arr, i, j);
                 } else {
                     handleComparisons(arr[j], "<", pivot);
                 }
@@ -179,15 +180,139 @@ public class SortingMethods {
                 if (arr[j] <= pivot) {  //if current element <=pivot move it to left
                     handleComparisons(arr[j], "<=", pivot);
                     i++;
-                    swap(arr, arr, i, j);
+                    swap(arr, i, j);
                 } else {
                     handleComparisons(arr[j], ">", pivot);
                 }
             }
         }
-        swap(arr, arr, i + 1, r);
+        swap(arr, i + 1, r);
 
         return i + 1;
+    }
+
+
+    /********************************/
+
+    public int[] dualPivotQuickSort(boolean printOutcome, boolean isDESC_SortOrder) {
+        array = initialArray.clone();
+        resetCounters();
+        int left = 0;
+        int right = array.length - 1;
+
+        dualPivotQuickSorting(array, left, right, isDESC_SortOrder);
+
+        if (printOutcome) {
+            System.out.println("Dual-Pivot Quick Sort");
+            printAfterSorting();
+        }
+        return array;
+    }
+
+
+    void dualPivotQuickSorting(int[] arr, int left, int right, boolean isDESC_SortOrder) {
+
+        if (right - left >= 1) {
+            int[] positionsOfPivots = partitionCount(arr, left, right);
+            int posP = positionsOfPivots[0];
+            int posQ = positionsOfPivots[1];
+            if (posQ != 0) {
+                dualPivotQuickSorting(arr, left, posP - 1, false);
+                dualPivotQuickSorting(arr, posP + 1, posQ - 1, false);
+                dualPivotQuickSorting(arr, posQ + 1, right, false);
+            }
+        }
+    }
+
+    public void rotate3(int[] arr, int a, int b, int c) {
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = arr[c];
+        arr[c] = temp;
+        System.err.println(arr[a] + " <-->' " + arr[b] + " <-->' " + arr[c]);
+        swapsCounter += 2;
+    }
+
+    public int[] partitionCount(int[] arr, int left, int right) {
+        int p;  //left pivot
+        int q;  //right pivot
+        int i = left + 1;
+        int k = right - 1;
+        int j = i;
+        int d = 0;  // holds the difference between small and large elements
+        int[] positionsOfPivots = new int[2];   //tab[0] = posP, tab[1] = posQ
+
+        if (right <= left) return null;
+
+        if (arr[right] < arr[left]) {
+            handleComparisons(arr[right], "<", arr[left]);
+            p = arr[right];
+            q = arr[left];
+        } else {
+            handleComparisons(arr[right], ">=", arr[left]);
+            p = arr[left];
+            q = arr[right];
+        }
+
+        while (j <= k) {
+            if (d >= 0) {
+                if (arr[j] < p) {
+                    handleComparisons(arr[j], "<", p);
+                    swap(arr, i, j);
+                    i++;
+                    j++;
+                    d++;
+                } else {
+                    handleComparisons(arr[j], ">=", p);
+                    if (arr[j] < q) {
+                        handleComparisons(arr[j], "<", q);
+                        j++;
+                    } else {
+                        handleComparisons(arr[j], ">=", p);
+                        swap(arr, j, k);
+                        k--;
+                        d--;
+                    }
+                }
+            } else {
+                if (arr[k] > q) {
+                    handleComparisons(arr[k], ">", q);
+                    k--;
+                    d--;
+                } else {
+                    handleComparisons(arr[k], "<=", q);
+                    if (arr[k] < p) {
+                        handleComparisons(arr[k], "<", p);
+                        rotate3(arr, k, j, i);
+                        i++;
+                        d++;
+                    } else {
+                        handleComparisons(arr[k], ">=", p);
+                        swap(arr, j, k);
+                    }
+                    j++;
+                }
+            }
+        }
+
+
+        arr[left] = arr[i - 1];     //something like 2 swaps
+        arr[i - 1] = p;
+
+        System.err.println(arr[left] + " <--> " + arr[k + 1]);
+        System.err.println(arr[right] + " <--> " + arr[i - 1]);
+
+        arr[right] = arr[k + 1];
+        arr[k + 1] = q;
+
+        swapsCounter += 2;
+
+        int posP = i - 1;
+        int posQ = k + 1;
+        positionsOfPivots[0] = posP;
+        positionsOfPivots[1] = posQ;
+
+        return positionsOfPivots;
     }
 
     /********************************/
@@ -216,6 +341,14 @@ public class SortingMethods {
         swapsCounter++;
     }
 
+    public void swap(int[] arr, int index1, int index2) {
+        System.err.println(arr[index1] + " <--> " + arr[index2]);
+        int temp = arr[index1];
+        arr[index1] = arr[index2];
+        arr[index2] = temp;
+        swapsCounter++;
+    }
+
     public void handleComparisons(int a, String comparator, int b) {
         System.err.println(a + " " + comparator + " " + b);
         comparisonsCounter++;
@@ -237,40 +370,4 @@ public class SortingMethods {
     }
 
 
-    /********************************/
-
-    public int[] dualPivotQuickSort(boolean printOutcome, boolean isDESC_SortOrder) {
-        array = initialArray.clone();
-        resetCounters();
-        int n = array.length;
-
-        ///
-
-        if (printOutcome) {
-            System.out.println("Insert Sort");
-            printAfterSorting();
-        }
-        return array;
-    }
-
-    void dualPivotQuicksorting(int[] arr, int left, int right, boolean isDESC_SortOrder) {
-        if (arr[right] > arr[left]) {
-//            swap(arr[left], arr[right]);
-        }
-
-        int p = arr[left];
-        int q = arr[right];
-
-//        partitionDualPivot(arr, p, q, posP, posQ);
-
-    }
-
-    public void rotate3(int a, int b, int c) {
-        int temp = a;
-        a = b;
-        b = c;
-        c = temp;
-//        System.err.println(a + "  <-->'  " + b);
-//        swapsCounter++;
-    }
 }
