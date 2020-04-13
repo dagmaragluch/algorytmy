@@ -1,7 +1,6 @@
 public class SortingMethods {
-    private int[] array, initialArray;
-    private int comparisonsCounter, swapsCounter;
-    private int posP1, posQ1;
+    protected int[] array, initialArray;
+    protected int comparisonsCounter, swapsCounter;
 
 
     public SortingMethods(int[] initialArray, int comparisonsCounter, int swapsCounter) {
@@ -229,7 +228,7 @@ public class SortingMethods {
         arr[a] = arr[b];
         arr[b] = arr[c];
         arr[c] = temp;
-        System.err.println(arr[a] + " <-->' " + arr[b] + " <-->' " + arr[c]);
+//        System.err.println(arr[a] + " <-->' " + arr[b] + " <-->' " + arr[c]);
         swapsCounter += 2;
     }
 
@@ -295,16 +294,14 @@ public class SortingMethods {
             }
         }
 
-
         arr[left] = arr[i - 1];     //something like 2 swaps
         arr[i - 1] = p;
 
-        System.err.println(arr[left] + " <--> " + arr[k + 1]);
-        System.err.println(arr[right] + " <--> " + arr[i - 1]);
+//        System.err.println(arr[left] + " <--> " + arr[k + 1]);
+//        System.err.println(arr[right] + " <--> " + arr[i - 1]);
 
         arr[right] = arr[k + 1];
         arr[k + 1] = q;
-
         swapsCounter += 2;
 
         int posP = i - 1;
@@ -334,7 +331,7 @@ public class SortingMethods {
     }
 
     public void swap(int[] arr1, int[] arr2, int index1, int index2) {
-        System.err.println(arr1[index1] + " <--> " + arr2[index2]);
+//        System.err.println(arr1[index1] + " <--> " + arr2[index2]);
         int temp = arr1[index1];
         arr1[index1] = arr2[index2];
         arr2[index2] = temp;
@@ -342,7 +339,7 @@ public class SortingMethods {
     }
 
     public void swap(int[] arr, int index1, int index2) {
-        System.err.println(arr[index1] + " <--> " + arr[index2]);
+//        System.err.println(arr[index1] + " <--> " + arr[index2]);
         int temp = arr[index1];
         arr[index1] = arr[index2];
         arr[index2] = temp;
@@ -350,7 +347,7 @@ public class SortingMethods {
     }
 
     public void handleComparisons(int a, String comparator, int b) {
-        System.err.println(a + " " + comparator + " " + b);
+//        System.err.println(a + " " + comparator + " " + b);
         comparisonsCounter++;
     }
 

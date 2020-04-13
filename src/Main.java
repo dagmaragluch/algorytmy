@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.StrictMath.abs;
 import static java.lang.System.exit;
 
 public class Main {
@@ -43,6 +44,7 @@ public class Main {
                 System.out.print(" " + numbers[j]);
             }
             SortingMethods sortingMethods = new SortingMethods(numbers, swapsCounter, comparisonsCounter);
+            RadixSort radixSortClass = new RadixSort(numbers, swapsCounter, comparisonsCounter);
             System.out.println("\n*************");
 
             long startTime = System.nanoTime();
@@ -60,6 +62,9 @@ public class Main {
                 case "mquick":
                     sortingMethods.dualPivotQuickSort(true, isDESC_SortOrder);
                     break;
+                case "radix":
+                    radixSortClass.radixSort(true, isDESC_SortOrder);
+                    break;
             }
             long stopTime = System.nanoTime();
             System.err.println("time: " + TimeUnit.NANOSECONDS.toNanos(stopTime - startTime));
@@ -73,11 +78,11 @@ public class Main {
                     for (int kk = 0; kk < repeats; kk++) {
                         ArrayList list = new ArrayList<Integer>(i);
                         for (int h = 0; h < i; h++) {
-                            list.add(random.nextInt());
+                            list.add(abs(random.nextInt()));
                         }
                         SortingMethods sort = new SortingMethods(convertIntegers(list), 0, 0);
-
-                        makeStatisticsFile(sort, printWriter);
+                        RadixSort radix = new RadixSort(sort.initialArray, 0, 0);
+                        makeStatisticsFile(sort, radix, printWriter);
                     }
                 }
             } catch (IOException e) {
@@ -96,7 +101,7 @@ public class Main {
         return ret;
     }
 
-    private static void makeStatisticsFile(SortingMethods sortingMethods, PrintWriter printWriter) {
+    private static void makeStatisticsFile(SortingMethods sortingMethods, RadixSort radix, PrintWriter printWriter) {
         long startTime = System.nanoTime();
         int[] list = sortingMethods.insertSort(false, false);
         long stopTime = System.nanoTime();
@@ -111,6 +116,16 @@ public class Main {
         list = sortingMethods.quickSort(false, false);
         stopTime = System.nanoTime();
         writeToFile("QuickSort", sortingMethods, printWriter, startTime, list, stopTime);
+
+        startTime = System.nanoTime();
+        list = sortingMethods.dualPivotQuickSort(false, false);
+        stopTime = System.nanoTime();
+        writeToFile("DualPivot", sortingMethods, printWriter, startTime, list, stopTime);
+
+        startTime = System.nanoTime();
+        list = radix.radixSort(false, false);
+        stopTime = System.nanoTime();
+        writeToFile("RadixSort", sortingMethods, printWriter, startTime, list, stopTime);
 
     }
 
