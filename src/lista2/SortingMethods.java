@@ -1,3 +1,5 @@
+package lista2;
+
 public class SortingMethods {
     protected int[] array, initialArray;
     protected int comparisonsCounter, swapsCounter;

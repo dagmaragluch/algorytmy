@@ -1,3 +1,5 @@
+package lista2;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -125,7 +127,7 @@ public class Main {
         startTime = System.nanoTime();
         list = radix.radixSort(false, false);
         stopTime = System.nanoTime();
-        writeToFile("RadixSort", sortingMethods, printWriter, startTime, list, stopTime);
+        writeToFile("lista2.RadixSort", sortingMethods, printWriter, startTime, list, stopTime);
 
     }
 
