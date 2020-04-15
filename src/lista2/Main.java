@@ -81,6 +81,8 @@ public class Main {
                         ArrayList list = new ArrayList<Integer>(i);
                         for (int h = 0; h < i; h++) {
                             list.add(abs(random.nextInt()));
+//                            list.add(random.nextInt((9999 - 1000) + 1) + 1000);        //liczby 4-cyfrowe
+
                         }
                         SortingMethods sort = new SortingMethods(convertIntegers(list), 0, 0);
                         RadixSort radix = new RadixSort(sort.initialArray, 0, 0);
@@ -104,34 +106,50 @@ public class Main {
     }
 
     private static void makeStatisticsFile(SortingMethods sortingMethods, RadixSort radix, PrintWriter printWriter) {
+
         long startTime = System.nanoTime();
         int[] list = sortingMethods.insertSort(false, false);
+        Runtime runtime = Runtime.getRuntime();
+        runtime.gc();   // run the garbage collector
+        long memory = runtime.totalMemory() - runtime.freeMemory();
         long stopTime = System.nanoTime();
-        writeToFile("InsertSort", sortingMethods, printWriter, startTime, list, stopTime);
+        writeToFile("InsertSort", sortingMethods, printWriter, startTime, list, stopTime, memory);
 
         startTime = System.nanoTime();
         list = sortingMethods.mergeSort(false, false);
+        runtime = Runtime.getRuntime();
+        runtime.gc();
+        memory = runtime.totalMemory() - runtime.freeMemory();
         stopTime = System.nanoTime();
-        writeToFile("MergeSort", sortingMethods, printWriter, startTime, list, stopTime);
+        writeToFile("MergeSort", sortingMethods, printWriter, startTime, list, stopTime, memory);
 
         startTime = System.nanoTime();
         list = sortingMethods.quickSort(false, false);
+        runtime = Runtime.getRuntime();
+        runtime.gc();
+        memory = runtime.totalMemory() - runtime.freeMemory();
         stopTime = System.nanoTime();
-        writeToFile("QuickSort", sortingMethods, printWriter, startTime, list, stopTime);
+        writeToFile("QuickSort", sortingMethods, printWriter, startTime, list, stopTime, memory);
 
         startTime = System.nanoTime();
         list = sortingMethods.dualPivotQuickSort(false, false);
+        runtime = Runtime.getRuntime();
+        runtime.gc();
+        memory = runtime.totalMemory() - runtime.freeMemory();
         stopTime = System.nanoTime();
-        writeToFile("DualPivot", sortingMethods, printWriter, startTime, list, stopTime);
+        writeToFile("DualPivot", sortingMethods, printWriter, startTime, list, stopTime, memory);
 
         startTime = System.nanoTime();
         list = radix.radixSort(false, false);
+        runtime = Runtime.getRuntime();
+        runtime.gc();
+        memory = runtime.totalMemory() - runtime.freeMemory();
         stopTime = System.nanoTime();
-        writeToFile("lista2.RadixSort", sortingMethods, printWriter, startTime, list, stopTime);
+        writeToFile("RadixSort", sortingMethods, printWriter, startTime, list, stopTime, memory);
 
     }
 
-    private static void writeToFile(String sortType, SortingMethods sortingMethods, PrintWriter printWriter, long startTime, int[] list, long stopTime) {
+    private static void writeToFile(String sortType, SortingMethods sortingMethods, PrintWriter printWriter, long startTime, int[] list, long stopTime, long memory) {
         printWriter.print(sortType);
         printWriter.print(',');
         printWriter.print(list.length);
@@ -139,6 +157,8 @@ public class Main {
         printWriter.print(sortingMethods.getComparisonsCounter());
         printWriter.print(',');
         printWriter.print(sortingMethods.getSwapsCounter());
+        printWriter.print(',');
+        printWriter.print(memory);
         printWriter.print(',');
         printWriter.print(TimeUnit.NANOSECONDS.toNanos(stopTime - startTime));
         printWriter.println();
