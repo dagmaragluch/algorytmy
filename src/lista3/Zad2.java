@@ -14,10 +14,10 @@ public class Zad2 {
         System.out.println("Enter array length");
         int n = scanner.nextInt();
         int[] numbers = new int[n];
-        System.out.println("Enter k - number of positional statistic (0 < k < n):");
+        System.out.println("Enter k - number of positional statistic (1 <= k <= n):");
         int k = scanner.nextInt();
-        if (k <= 0 || k >= n)
-            throw new IllegalArgumentException("k must be in range (0 < k < n)");
+        if (k <= 0 || k > n)
+            throw new IllegalArgumentException("k must be in range (1 <= k <= n)");
 
         switch (mode) {
             case "-r":
@@ -27,19 +27,20 @@ public class Zad2 {
                 }
                 SelectionAlgorithms selectionAlgorithms = new SelectionAlgorithms(convertIntegers(list), k, 0, 0);
                 selectionAlgorithms.executeRandomizedSelect();
-
                 break;
+
             case "-p":
                 int[] array = generateRandomPermutation(n);
                 SelectionAlgorithms selectionAlgorithms2 = new SelectionAlgorithms(array, k, 0, 0);
-                selectionAlgorithms2.executeRandomizedSelect();
+//                selectionAlgorithms2.executeRandomizedSelect();
+                selectionAlgorithms2.executeSelect();
                 break;
         }
 
     }
 
 
-    private static int[] convertIntegers(List<Integer> integers) {
+    public static int[] convertIntegers(List<Integer> integers) {
         int[] ret = new int[integers.size()];
         Iterator<Integer> iterator = integers.iterator();
         for (int i = 0; i < ret.length; i++) {
