@@ -24,7 +24,7 @@ public class SelectionAlgorithms {
         resetCounters();
         int n = array.length;
 
-        int pos = randomizedSelect(array, 0, n - 1, positionalStatistic - 1);
+        int pos = randomizedSelect(array, 0, n - 1, positionalStatistic);
 
         System.out.println("Randomized Select");
         printAfterSorting(pos, array);
@@ -54,12 +54,9 @@ public class SelectionAlgorithms {
         } else {
             return randomizedSelect(arr, pivot + 1, upperBound, position - size);
         }
-
     }
 
-
     public int randomizedPartition(int[] arr, int lowerBound, int upperBound) {
-
         int i = getRandomNumberInRange(lowerBound, upperBound);
         swap(arr, upperBound, i);
 
@@ -67,10 +64,8 @@ public class SelectionAlgorithms {
     }
 
     private int getRandomNumberInRange(int min, int max) {
-
-        if (min > max) {
+        if (min > max)
             throw new IllegalArgumentException("max must be > min");
-        }
 
         return random.nextInt((max - min) + 1) + min;
     }
@@ -79,9 +74,18 @@ public class SelectionAlgorithms {
 
     public int[] executeSelect() {
         array = initialArray.clone();
+        int n = array.length;
         resetCounters();
+        int pos;
 
-        int pos = select(array, positionalStatistic + 1);
+        if (n < 10) {           //jeśli danych jest < 10 to nie wykonujemy procedury select
+            System.err.println("Sorting Table");
+            array = insertSort(array);
+            pos = array[positionalStatistic - 1];
+        } else {
+            pos = select(array, positionalStatistic-1);
+        }
+
 
         System.out.println("Select");
         printAfterSorting2(pos, array);
@@ -91,21 +95,14 @@ public class SelectionAlgorithms {
 
 
     public int select(int[] array, int position) {
-        int n = array.length;
         int pivot;
-
-        if (n < 10) {
-            System.err.println("Sorting Table");
-            array = insertSort(array);
-            return array[position - 1];
-        }
 
         ArrayList<int[]> arraysOfFives = createArrays(array); //grupowanie piątkami (+ew. 1 tablicą z mniejszą il. elem)
         int[] arrayOfMedians = getMedians(arraysOfFives);     //tworzenie tablicy median
         int mediansLength = arrayOfMedians.length;
         arrayOfMedians = insertSort(arrayOfMedians);        //sortowanie median
 
-        if (mediansLength <= 5) {
+        if (mediansLength <= 5 && mediansLength > 0) {
             pivot = arrayOfMedians[mediansLength / 2];
         } else {
             pivot = select(arrayOfMedians, arrayOfMedians[mediansLength / 2]);
@@ -125,14 +122,13 @@ public class SelectionAlgorithms {
 
     }
 
-
     /********************************/
 
     private int[] getLow(int[] array, int pivot) {
         ArrayList<Integer> lowArrayList = new ArrayList<>();
         for (int i = 0; i < array.length; i++)
-            if (i < pivot)
-                lowArrayList.add(i);
+            if (array[i] < pivot)
+                lowArrayList.add(array[i]);
         return Zad2.convertIntegers(lowArrayList);
     }
 
@@ -140,8 +136,8 @@ public class SelectionAlgorithms {
     private int[] getHigh(int[] array, int pivot) {
         ArrayList<Integer> highArrayList = new ArrayList<>();
         for (int i = 0; i < array.length; i++)
-            if (i > pivot)
-                highArrayList.add(i);
+            if (array[i] > pivot)     // or >= ??
+                highArrayList.add(array[i]);
         return Zad2.convertIntegers(highArrayList);
     }
 
@@ -156,15 +152,18 @@ public class SelectionAlgorithms {
         return arrayOfMedians;
     }
 
-
     private int getMedian(int[] arr) {
         int n = arr.length;
         arr = insertSort(arr);
-        int median = arr[(int) Math.floor(n / 2)];
+        int median;
 
+        if (n % 2 == 0) {
+            median = arr[(n / 2) - 1];
+        } else {
+            median = arr[(int) Math.ceil(n / 2)];
+        }
         return median;
     }
-
 
     private ArrayList<int[]> createArrays(int[] array) {
         ArrayList<int[]> arraysOfFives = new ArrayList<>();
@@ -227,6 +226,9 @@ public class SelectionAlgorithms {
         return i + 1;
     }
 
+
+    /*****************/
+
     public int getComparisonsCounter() {
         return comparisonsCounter;
     }
@@ -258,7 +260,7 @@ public class SelectionAlgorithms {
 
     public void printAfterSorting(int position, int[] array) {
         for (int j = 0; j < array.length; j++) {
-            if (j == position)
+            if (array[j] == position)
                 System.out.print("[" + array[j] + "] ");
             else
                 System.out.print(array[j] + " ");
@@ -269,7 +271,9 @@ public class SelectionAlgorithms {
     }
 
 
-    public void printAfterSorting2(int pivot, int[] array) {
+    public void printAfterSorting2(int pivot, int[] array1) {
+        array = prepareToPrint(pivot);
+
         for (int j = 0; j < array.length; j++) {
             if (array[j] == pivot)
                 System.out.print("[" + array[j] + "] ");
@@ -285,5 +289,25 @@ public class SelectionAlgorithms {
         setComparisonsCounter(0);
         setSwapsCounter(0);
     }
+
+    private int[] prepareToPrint(int pivot) {
+        int[] low = getLow(initialArray, pivot);
+        int[] high = getHigh(initialArray, pivot);
+
+        int[] preparedArray = new int[initialArray.length];
+        int i = 0;
+        for (int value : low) {
+            preparedArray[i] = value;
+            i++;
+        }
+        preparedArray[i] = pivot;
+        i++;
+        for (int value : high) {
+            preparedArray[i] = value;
+            i++;
+        }
+        return preparedArray;
+    }
+
 
 }

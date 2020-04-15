@@ -13,7 +13,6 @@ public class Zad2 {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter array length");
         int n = scanner.nextInt();
-        int[] numbers = new int[n];
         System.out.println("Enter k - number of positional statistic (1 <= k <= n):");
         int k = scanner.nextInt();
         if (k <= 0 || k > n)
@@ -23,16 +22,17 @@ public class Zad2 {
             case "-r":
                 ArrayList list = new ArrayList<Integer>();
                 for (int i = 0; i < n; i++) {
-                    list.add(abs(random.nextInt(20)));
+                    list.add(abs(random.nextInt(1000)));
                 }
                 SelectionAlgorithms selectionAlgorithms = new SelectionAlgorithms(convertIntegers(list), k, 0, 0);
                 selectionAlgorithms.executeRandomizedSelect();
+                selectionAlgorithms.executeSelect();
                 break;
 
             case "-p":
                 int[] array = generateRandomPermutation(n);
                 SelectionAlgorithms selectionAlgorithms2 = new SelectionAlgorithms(array, k, 0, 0);
-//                selectionAlgorithms2.executeRandomizedSelect();
+                selectionAlgorithms2.executeRandomizedSelect();
                 selectionAlgorithms2.executeSelect();
                 break;
         }
